@@ -25,7 +25,7 @@
 		'x-offset'=>12, // The larger the number the further the distance from the left hand side, 0 to align to the left.
 		'y-offset'=>45, // The vertical alignment, trial and error between 20 and 60.
 		'file'=>'./Futura.ttc', // Font path
-		'color'=>imagecolorallocate($image, 0, 0, 0), // RGB Colour of the text
+		'color'=>imagecolorallocate($image, 19, 128, 177), // RGB Colour of the text
 	);
 	for($i = 0; $i <= 60; $i++){
 		
@@ -48,11 +48,11 @@
 			// Open the first source image and add the text.
 			$image = imagecreatefrompng('images/countdown.png');
 			;
-			$text = $interval->format('%a:%H:%I:%S');
+			$text = $interval->format('%a %H %I %S');
 			// %a is weird in that it doesn’t give you a two digit number
 			// check if it starts with a single digit 0-9
 			// and prepend a 0 if it does
-			if(preg_match('/^[0-9]\:/', $text)){
+			if(preg_match('/^[0-9]\ /', $text)){
 				$text = '0'.$text;
 			} else {
 				$text = '' .$text;
