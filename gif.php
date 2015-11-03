@@ -4,11 +4,13 @@
 	date_default_timezone_set('Europe/London');
 	include 'GIFEncoder.class.php';
 	include 'php52-fix.php';
+
 	$time = $_GET['time'];
 	$future_date = new DateTime(date('r',strtotime($time)));
 	$time_now = time();
 	$now = new DateTime(date('r', $time_now));
-	$frames = array();	
+
+	$frames = array();
 	$delays = array();
 
 
@@ -18,22 +20,22 @@
 	$delay = 100;// milliseconds
 
 	$font = array(
-		'size'=>23, // Font size, in pts usually.
+		'size'=>28, // Font size, in pts usually.
 		'angle'=>0, // Angle of the text
-		'x-offset'=>7, // The larger the number the further the distance from the left hand side, 0 to align to the left.
-		'y-offset'=>30, // The vertical alignment, trial and error between 20 and 60.
-		'file'=>'./GillSans.ttc', // Font path
-		'color'=>imagecolorallocate($image, 55, 160, 130), // RGB Colour of the text
+		'x-offset'=>12, // The larger the number the further the distance from the left hand side, 0 to align to the left.
+		'y-offset'=>45, // The vertical alignment, trial and error between 20 and 60.
+		'file'=>'./Futura.ttc', // Font path
+		'color'=>imagecolorallocate($image, 0, 0, 0), // RGB Colour of the text
 	);
 	for($i = 0; $i <= 60; $i++){
 		
 		$interval = date_diff($future_date, $now);
-		
+
 		if($future_date < $now){
 			// Open the first source image and add the text.
-			$image = imagecreatefrompng('images/countdown.png');
+			$image = imagecreatefrompng('images/countdown_ended.png');
 			;
-			$text = $interval->format('00:00:00:00');
+			$text = $interval->format('');
 			imagettftext ($image , $font['size'] , $font['angle'] , $font['x-offset'] , $font['y-offset'] , $font['color'] , $font['file'], $text );
 			ob_start();
 			imagegif($image);
@@ -46,7 +48,15 @@
 			// Open the first source image and add the text.
 			$image = imagecreatefrompng('images/countdown.png');
 			;
-			$text = $interval->format('0%a %H %I %S');
+			$text = $interval->format('%a:%H:%I:%S');
+			// %a is weird in that it doesn’t give you a two digit number
+			// check if it starts with a single digit 0-9
+			// and prepend a 0 if it does
+			if(preg_match('/^[0-9]\:/', $text)){
+				$text = '0'.$text;
+			} else {
+				$text = '' .$text;
+			}
 			imagettftext ($image , $font['size'] , $font['angle'] , $font['x-offset'] , $font['y-offset'] , $font['color'] , $font['file'], $text );
 			ob_start();
 			imagegif($image);
